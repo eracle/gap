@@ -2,6 +2,7 @@ package it.clustering.kmedoids;
 
 import it.Instance;
 import it.clustering.ClusteringAlgorithm;
+import it.clustering.Clusters;
 import it.clustering.distanceFunction.DistanceFunction;
 
 import java.util.ArrayList;
@@ -9,7 +10,9 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-public class KMedoids<I extends Instance> implements ClusteringAlgorithm {
+
+
+public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 
 	private static Logger log = Logger.getLogger("KMedoids");
 
@@ -27,11 +30,7 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm {
 
 	private DistanceFunction<I> distanceFunction;
 
-	public List<Cluster<I>> getClusters() {
-		return clusters;
-	}
-
-	private List<Cluster<I>> clusters;
+	private Clusters<I> clusters;
 
 	private double changed_medoids_percentage;
 
@@ -74,6 +73,7 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm {
 
 			log.info("Iteration: " + iteration);
 
+			//set every cluster only to its medoid.
 			if(iteration!=1)
 				for (int i = 0; i < clusters.size(); i++) {
 					clusters.get(i).cleanCluster();
@@ -93,8 +93,7 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm {
 			if (iteration == 1) {
 				someShadowSwapHappened = true;
 			} else {
-				someShadowSwapHappened = removeShadowClusters(clusters,
-						distanceFunction);
+				someShadowSwapHappened = removeShadowClusters(clusters);
 			}
 			// NEW MEDOIDS COMPUTING PHASE: //
 
@@ -232,12 +231,12 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm {
 	 * @param medoids
 	 * @return
 	 */
-	private List<Cluster<I>> buildClusters(
+	private Clusters<I> buildClusters(
 			List<I> medoids, DistanceFunction<I> distanceFunction) {
 
 		log.info("buildingClusters \nmedoids: " + medoids.toString());
 
-		List<Cluster<I>> clusters = new ArrayList<Cluster<I>>();
+		Clusters<I> clusters = new Clusters<I>();
 		for (int i = 0; i < medoids.size(); i++) {
 			clusters.add(new Cluster<I>(medoids.get(i), distanceFunction));
 		}
@@ -245,10 +244,10 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm {
 	}
 
 	/**
-	 * Generate a list k uniformly random generated medoid.
+	 * Generate a list of k uniformly random choosen medoids.
 	 * 
 	 * @param k
-	 *            The number of medoids to be generated.
+	 *            The number of medoids to generate.
 	 * @param elements
 	 * @return
 	 */
@@ -271,7 +270,7 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm {
 	}
 
 	private boolean removeShadowClusters(
-			List<Cluster<I>> clusters, DistanceFunction<I> distanceFunction) {
+			List<Cluster<I>> clusters) {
 		boolean someSwapHappened = false;
 		for (int i = 0; i < clusters.size(); i++) {
 			if (clusters.get(i).isShadow()) {
@@ -287,6 +286,11 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm {
 			}
 		}
 		return someSwapHappened;
+	}
+
+	@Override
+	public Clusters<I> getClusters() {
+		return this.clusters;
 	}
 
 }

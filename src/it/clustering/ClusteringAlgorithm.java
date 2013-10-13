@@ -1,7 +1,11 @@
 package it.clustering;
 
-public interface ClusteringAlgorithm {
+import it.Instance;
 
-	void doClustering();
+public interface ClusteringAlgorithm<I extends Instance> {
+
+	public void doClustering();
+
+	public Clusters<I> getClusters();
 
 }

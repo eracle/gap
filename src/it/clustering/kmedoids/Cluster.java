@@ -2,6 +2,7 @@ package it.clustering.kmedoids;
 
 import it.Instance;
 import it.clustering.distanceFunction.DistanceFunction;
+import it.clustering.distanceFunction.Cached.CachedDistanceFunction;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,7 +24,6 @@ public class Cluster<I extends Instance> {
 	// the elements associated with the cluster
 	private List<I> elements;
 
-
 	private DistanceFunction<I> distanceFunction;
 
 	public Cluster(I medoid,DistanceFunction<I> distanceFunction) {
@@ -33,12 +33,12 @@ public class Cluster<I extends Instance> {
 		reSetCluster(this.medoid,this.distanceFunction);
 	}
 	
-	private void reSetCluster(I medoid, DistanceFunction<I> distance){
+	private void reSetCluster(I medoid, DistanceFunction<I> distanceFunction){
 	
 		this.medoid = medoid;
 		this.farestElement = medoid;
 		this.farestElementDistance=0.0;
-		this.distanceFunction = distance;
+		this.distanceFunction = distanceFunction;
 		this.elements = new ArrayList<I>();
 		this.elements.add(medoid);
 	}
