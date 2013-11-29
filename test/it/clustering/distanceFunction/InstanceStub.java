@@ -1,4 +1,4 @@
-package test;
+package it.clustering.distanceFunction;
 
 import it.Instance;
 
