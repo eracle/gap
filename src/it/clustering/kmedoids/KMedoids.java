@@ -54,7 +54,7 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 	}
 
 	@Override
-	public void doClustering() {
+	public Clusters<I> doClustering() {
 
 		log.info("doClustering");
 
@@ -163,6 +163,7 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 
 		} while (!shouldStop);
 
+		return this.clusters;
 	}
 
 	/**
@@ -288,9 +289,6 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 		return someSwapHappened;
 	}
 
-	@Override
-	public Clusters<I> getClusters() {
-		return this.clusters;
-	}
+	
 
 }
