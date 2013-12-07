@@ -1,4 +1,4 @@
-package it.clustering.distanceFunction.Cached;
+package it.clustering.distanceFunction.cached;
 
 import it.Instance;
 

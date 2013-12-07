@@ -1,20 +1,18 @@
 package it.clustering.kmedoids;
 
 import it.Instance;
-import it.clustering.ClusteringAlgorithm;
 import it.clustering.Clusters;
 import it.clustering.distanceFunction.DistanceFunction;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 
+public class KMedoids<I extends Instance> {
 
-public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
-
-	private static Logger log = Logger.getLogger("KMedoids");
+	private static Logger log = Logger.getLogger(KMedoids.class);
 
 	private static int MAX_ITERATIONS = 30;
 
@@ -42,27 +40,53 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 		return sum_of_squared_error;
 	}
 
-	public KMedoids(int k, List<I> elements, DistanceFunction<I> distanceFunction) {
-		if (k == 0)
-			throw new IllegalArgumentException("K cannot be zero");
-		if (k > elements.size())
-			throw new IllegalArgumentException(
-					"K cannot be more than n (n numbers of element to cluster)");
+
+	/**
+	 * This method perform a clustering task.
+	 * The k parameter must be in the [0,elements.size()] closed interval. Otherwise IllegalArgoumentException is thrown.
+	 * If k is zero, an empty Clusters object is returned.
+	 * @param k
+	 *            The number of clusters to be created.
+	 * @param elements
+	 *            The elements to cluster.
+	 * @param distanceFunction
+	 *            The distance function defined between pairs of elements.
+	 * @return The {@code}Clusters{@code} result object.
+	 */
+	public Clusters<I> doClustering(int k, List<I> elements,
+			DistanceFunction<I> distanceFunction) {
+		if (k < 0){
+			String msg = "K cannot be less than 0";
+			log.fatal(msg);
+			throw new IllegalArgumentException(msg);
+		}
+		if (k > elements.size()){
+			String msg = "K argument cannot be more than the number of elements";
+			log.fatal(msg);
+			throw new IllegalArgumentException(msg);
+			}
+		if (k == 0){
+			log.error("The K argument passed is 0, empty Clusters object returned");
+			return new Clusters<I>();
+		}
+		
+		//continues the execution, maybe could be implemented with a tailored case handling.
+		//TODO: implement a tailored case handling?
+		if(k == elements.size())
+			log.error("The K argument passed is equals to the numbers of elements");
+		
+		
 		this.k = k;
 		this.elements = elements;
 		this.distanceFunction = distanceFunction;
-	}
 
-	@Override
-	public Clusters<I> doClustering() {
-
-		log.info("doClustering");
+		log.info("Starting the clustering with k: "+this.k+" Elements: "+elements.size());
 
 		// random medoids initialization
 		List<I> medoids = generateRandomMedoids(k, elements);
 
 		clusters = buildClusters(medoids, this.distanceFunction);
-		
+
 		iteration = 0;
 
 		boolean shouldStop = false;
@@ -71,10 +95,10 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 
 			iteration++;
 
-			log.info("Iteration: " + iteration);
+			log.debug("Iteration: " + iteration);
 
-			//set every cluster only to its medoid.
-			if(iteration!=1)
+			// set every cluster only to its medoid.
+			if (iteration != 1)
 				for (int i = 0; i < clusters.size(); i++) {
 					clusters.get(i).cleanCluster();
 				}
@@ -144,9 +168,9 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 				log.info("TERMINATION BY MAX ITERATIONS: " + iteration);
 				shouldStop = true;
 			}
-			
+
 			if (!someShadowSwapHappened) {
-				
+
 				if (this.changed_medoids_percentage < MIN_CHANGED_MEDOIDS_PERCENTAGE) {
 					log.info("TERMINATION BY LESS CHANGED MEDOIDS PERCENTAGE ALLOWED: "
 							+ this.changed_medoids_percentage);
@@ -169,9 +193,9 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 	/**
 	 * Add the "element" passed to the closer cluster that belongs to the
 	 * "clusters" list of cluster passed. The closeness is measured by the
-	 * distance function passed. 
-	 * If the element is already a medoid of one of the clusters passed then it
-	 * will be not added to any cluster and the method returns null value.
+	 * distance function passed. If the element is already a medoid of one of
+	 * the clusters passed then it will be not added to any cluster and the
+	 * method returns null value.
 	 * 
 	 * @param element
 	 *            The element to be assigned to the closer cluster passed.
@@ -180,10 +204,10 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 	 * @param distanceFunction
 	 *            The distance function that compute the distance between object
 	 *            of typer E.
-	 * @return 
+	 * @return
 	 */
-	private double addToNearest(I element,
-			List<Cluster<I>> clusters, DistanceFunction<I> distanceFunction) {
+	private double addToNearest(I element, List<Cluster<I>> clusters,
+			DistanceFunction<I> distanceFunction) {
 
 		// used to determine the closest medoid
 		Cluster<I> min = null;
@@ -232,8 +256,8 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 	 * @param medoids
 	 * @return
 	 */
-	private Clusters<I> buildClusters(
-			List<I> medoids, DistanceFunction<I> distanceFunction) {
+	private Clusters<I> buildClusters(List<I> medoids,
+			DistanceFunction<I> distanceFunction) {
 
 		log.info("buildingClusters \nmedoids: " + medoids.toString());
 
@@ -244,16 +268,18 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 		return clusters;
 	}
 
+	//TODO: valutate: should I migrate the methods related to clusters class in there?
 	/**
-	 * Generate a list of k uniformly random choosen medoids.
+	 * Generates a list of k uniformly random chosen medoids.
 	 * 
 	 * @param k
 	 *            The number of medoids to generate.
-	 * @param elements
+	 * @param elements	The list of elements from 
 	 * @return
 	 */
-	private List<I> generateRandomMedoids(int k,
-			List<I> elements) {
+	private List<I> generateRandomMedoids(int k, List<I> elements) {
+		log.info("Generating Random Medoids");
+		
 		TreeSet<I> set = new TreeSet<I>();
 		int inseriti = 0;
 		while (inseriti < k) {
@@ -265,13 +291,12 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 			inseriti++;
 		}
 
-		log.info("generatedRandomMedoids: " + set.toString());
+		log.debug("generatedRandomMedoids: " + set.toString());
 
 		return new ArrayList<I>(set);
 	}
 
-	private boolean removeShadowClusters(
-			List<Cluster<I>> clusters) {
+	private boolean removeShadowClusters(List<Cluster<I>> clusters) {
 		boolean someSwapHappened = false;
 		for (int i = 0; i < clusters.size(); i++) {
 			if (clusters.get(i).isShadow()) {
@@ -288,7 +313,5 @@ public class KMedoids<I extends Instance> implements ClusteringAlgorithm<I> {
 		}
 		return someSwapHappened;
 	}
-
-	
 
 }

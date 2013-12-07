@@ -7,10 +7,12 @@ import java.util.ArrayList;
 
 public class Clusters<I extends Instance> extends ArrayList<Cluster<I>>{
 
+	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2301796384317941708L;
 
 	@Override
 	public String toString() {
