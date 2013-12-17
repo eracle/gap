@@ -2,7 +2,6 @@ package it.clustering.kmedoids;
 
 import it.Instance;
 import it.clustering.distanceFunction.DistanceFunction;
-import it.clustering.distanceFunction.cached.CachedDistanceFunction;
 
 import java.util.ArrayList;
 import java.util.Iterator;
