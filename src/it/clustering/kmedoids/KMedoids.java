@@ -29,7 +29,7 @@ public class KMedoids<I extends Instance> {
 	/** Execution variables: */
 	private int k;
 
-	//private List<I> elements;
+	// private List<I> elements;
 
 	private int iteration;
 
@@ -41,6 +41,7 @@ public class KMedoids<I extends Instance> {
 
 	private double average_distance_between_medoids;
 
+	/** Sum of the distances between each element and the medoid of the cluster which was been assigned*/
 	private double sum_of_squared_error;
 
 	public double getSum_of_squared_error() {
@@ -84,7 +85,7 @@ public class KMedoids<I extends Instance> {
 			log.error("The K argument passed is equals to the numbers of elements");
 
 		this.k = k;
-		//this.elements = elements;
+		// this.elements = elements;
 		this.distanceFunction = distanceFunction;
 
 		log.info("Starting the clustering with k: " + this.k + " Elements: " + elements.size()); //$NON-NLS-2$
@@ -108,27 +109,28 @@ public class KMedoids<I extends Instance> {
 				clusters.stripClusters();
 
 			// CHECKING THE CLUSTER'S MEMBERSHIP OF ALL THE ELEMENTS
-			this.sum_of_squared_error = 0.0;
-			for (int u = 0; u < elements.size(); u++)
-				// gathering squared scatters
-				this.sum_of_squared_error += clusters.addToNearest(elements
-						.get(u));
-
+			this.sum_of_squared_error = clusters.assignToTheNearestCluster(elements);
+			
 			log.info("SSE " + this.sum_of_squared_error);
 
 			// SHADOW CLUSTERS REMOVING PHASE//
-			boolean shadowSwapChanges = (iteration == 1);
-			if (!shadowSwapChanges) 
-				shadowSwapChanges = clusters.removeShadowClusters();
+			boolean shouldSwap = (iteration == 1);
+			boolean shadowSwapHappened = false;
 			
+			if (!shouldSwap)
+				shadowSwapHappened = clusters.removeShadowClusters();
 
 			// NEW MEDOIDS COMPUTING PHASE: //
 			List<I> new_medoids = clusters.getMedoids();
 
 			// STOPPING CRITERION PHASE //
 			updateStats(medoids, new_medoids);
-			if (!shadowSwapChanges)
-				shouldStop = stopCheck(medoids, new_medoids);
+			
+			// TODO: evaluate if should I take into account the fact that shadow
+			// swap happens when I check to stop or not.
+			// if (!shadowSwapChanges)
+			
+			shouldStop = stopCheck(medoids, new_medoids);
 
 			medoids = new_medoids;
 

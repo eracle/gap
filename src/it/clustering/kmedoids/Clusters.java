@@ -27,9 +27,12 @@ public class Clusters<I extends Instance> {
 
 	@Override
 	public String toString() {
-		StringBuilder ret = new StringBuilder("Clusters:\n ");
-		for (Cluster<I> elem : this.clusters) {
-			ret.append(elem.toString());
+		StringBuilder ret = new StringBuilder("Clusters:\n");
+		int i=1;
+		for (Cluster<I> cluster : this.clusters) {
+			ret.append("Cluster n:"+i+"\n");
+			i++;
+			ret.append(cluster.toString());
 		}
 		return ret.toString();
 	}
@@ -72,60 +75,49 @@ public class Clusters<I extends Instance> {
 	}
 
 	/**
-	 * Add the "element" passed to the closer cluster. The closeness is measured
-	 * by the distance function passed in the constructor. If the element is
-	 * already a medoid of one of the clusters passed then it will be not added
-	 * to any cluster and the zero value is returned.
+	 * Add every element of the list passed to the closest cluster. The closeness is
+	 * measured through the distance function passed to the constructor. If the
+	 * element is already a medoid of one of the clusters passed then it will be
+	 * not added to any cluster.
 	 * 
-	 * @param element
-	 *            The element to be assigned to the closer cluster passed.
-	 * @return The squared distance between the element passed and the medoid of
-	 *         the cluster which is been assigned to. Zero if the element passed
-	 *         is exactly one of the medoids of the clusters.
+	 * @param elements
+	 *            The list of elements that will be assigned to the closest
+	 *            cluster.
+	 * @return The sum of the squared distance between each element and the
+	 *         medoid of the cluster which was been assigned.
 	 */
-	public double addToNearest(I element) {
-
-		// used to determine the closest medoid
-		Cluster<I> min = null;
-		double min_distance = Double.MAX_VALUE;
-
-		// distance between the element and the i-th medoid
-		double element_scatter = 0;
-
-		// i don't need to insert an element that is already a medoids
-		// because in the build phase i already put it on his cluster
-		boolean notInsertedYet = true;
-
-		for (int i = 0; (i < clusters.size()) && notInsertedYet; i++) {
-			I ithMedoid = clusters.get(i).getMedoid();
-
-			// I check if the element is a medoid
-			if (element.equals(ithMedoid)) {
-				notInsertedYet = false;
-			} else {
-				double distance = this.distanceFunc
-						.distance(element, ithMedoid);
-
-				if (distance == min_distance) {
-					if (min.hashCode() < clusters.get(i).hashCode()) {
-						min_distance = distance;
-						min = clusters.get(i);
-					}
-				} else if (distance < min_distance) {
-					min_distance = distance;
-					min = clusters.get(i);
+	public double assignToTheNearestCluster(List<I> elements) {
+		double sum = 0;
+		for (I element : elements) {
+			// Let's scan all the clusters
+			// for identify the closest medoid
+			
+			Cluster<I> selectedCluster = clusters.get(0);
+			I closestMedoid = selectedCluster.getMedoid();
+			double closestMedoidDistance = this.distanceFunc.distance(element, closestMedoid);
+			
+			
+			for (Cluster<I> cluster : this.clusters) {
+				
+				I iterationMedoid = cluster.getMedoid();
+				double iterationMedoidDistance = this.distanceFunc.distance(element, iterationMedoid);
+				
+				if(iterationMedoidDistance < closestMedoidDistance){
+					selectedCluster = cluster;
+					closestMedoid = iterationMedoid;
+					closestMedoidDistance = iterationMedoidDistance;
 				}
 			}
+			
+			//adding the element to the closest cluster
+			selectedCluster.addElement(element);
+			
+			// summing the squared of the distance
+			sum +=Math.pow(closestMedoidDistance, 2);;
+			
+			
 		}
-
-		// Finally i must have a cluster in min variable
-		// i put the element in the cluster with min distance
-		if (notInsertedYet) {
-			min.addElement(element);
-			element_scatter = Math.pow(min_distance, 2);
-			return element_scatter;
-		} else
-			return 0;
+		return sum;
 	}
 
 	// TODO: write shadow clusters contract
@@ -153,6 +145,7 @@ public class Clusters<I extends Instance> {
 
 	/**
 	 * Returns a list made by all the medoids of the clusters.
+	 * 
 	 * @return A list of the medoids of the clusters.
 	 */
 	public List<I> getMedoids() {

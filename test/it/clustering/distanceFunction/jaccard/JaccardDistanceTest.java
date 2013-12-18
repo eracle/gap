@@ -1,12 +1,14 @@
 package it.clustering.distanceFunction.jaccard;
 
 import static org.junit.Assert.*;
+import it.clustering.distanceFunction.DistanceFunctionTest;
 import it.clustering.distanceFunction.jaccard.JaccardDistance;
+import it.clustering.distanceFunction.jaccard.TreeSetInstance;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class JaccardDistanceTest{
+public class JaccardDistanceTest extends DistanceFunctionTest{
 
 	JaccardDistance<String,TreeSetInstance<String>>  sut;
 	
@@ -115,12 +117,6 @@ public class JaccardDistanceTest{
 		//state validation
 		assesDomainDefinition(res);
 		assertTrue("Result is not 0.777...",res==(7.0/9.0));
-	}
-	
-	private void assesDomainDefinition(double res){
-		assertTrue("Result less than zero", res >= 0);
-		assertTrue("Result more than one", res <= 1.0);
-		
 	}
 	
 }
