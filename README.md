@@ -60,12 +60,12 @@ http://www.linkedin.com/pub/antonio-ercole-de-luca/1b/340/197.
 
 ## Todo:
 Tested and well implemented:
-- Caching system;
-- Distance Matrix classes (as a distance function);
-- Distance Matrix graphical plotting, either with the instances already clustered; [2]
+- Distances caching classes;
+- Distances Matrix classes (as a distance function);
+- Distances Matrix graphical plotting, either with the instances already clustered; [2]
 - All the modules's test classes;
-- Modify the Apache DBSCAN source code in order to automatically return an additional cluster (the one with the NOISE labelled instances).
-
+- Modify the Apache DBSCAN source code in order to automatically return an additional cluster (the one with the NOISE labelled instances);
+- Mavenizing it.
 
 
 ##Bibliography:
