@@ -43,9 +43,12 @@ To be executed needs:
 - a List of Instances; 
 - a distanceFunction;
 - the number of clusters needed (the k value).
-
 Every cluster obtained has an element which is the rappresentative object of the cluster (from now "Medoid").
 This algorithm tries to minimize the sum of the distances between every instance and the Medoid of his cluster.
+
+#### Apache Commons Math3 DBSCAN algorithm  
+This module is a slightly modified version of the Apache Commons Math 3 library DBSCAN class algorithm.
+The only modifies done are the ones needed to the class to be compliant with the generic interfaces of this library. 
 
 ## History
 The initial code of the K-Medoids algorithm was developed for solving a news clustering task assigned in the course of Information Retrieval, tought by Paolo Ferragina, Università di Pisa.
@@ -54,12 +57,15 @@ Author: Antonio Ercole De Luca
 http://www.linkedin.com/pub/antonio-ercole-de-luca/1b/340/197.
 
 
+
 ## Todo:
 Tested and well implemented:
 - Caching system;
 - Distance Matrix classes (as a distance function);
 - Distance Matrix graphical plotting, either with the instances already clustered; [2]
-- All the modules's test classes.
+- All the modules's test classes;
+- Modify the Apache DBSCAN source code in order to automatically return an additional cluster (the one with the NOISE labelled instances).
+
 
 
 ##Bibliography:
