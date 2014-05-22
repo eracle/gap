@@ -6,6 +6,7 @@ This is a newborn clustering repository, actually is in an enbrional phase, comp
 - Generic Distance Function class;
 - Jaccard distance function class;
 - K-Medoids algorithm;
+- Modified version of the Apache Commons Math3 DBSCAN algorithm 
 - Some test classes.
 
 ##Why This?
