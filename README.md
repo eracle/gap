@@ -63,8 +63,6 @@ Author: [Antonio Ercole De Luca][3]
 - Modify the Apache DBSCAN source code in order to return an additional cluster (the one with the NOISE labelled instances);
 
 
-## Bibliography:
-
 [1]: http://nlp.stanford.edu/IR-book/pdf/irbookonlinereading.pdf
 [2]: http://en.wikipedia.org/wiki/Distance_matrix
 [3]: http://www.linkedin.com/pub/antonio-ercole-de-luca/1b/340/197
