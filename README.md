@@ -64,7 +64,6 @@ Tested and well implemented:
 - Distances Matrix graphical plotting, either with the instances already clustered; [2]
 - Unit tests;
 - Modify the Apache DBSCAN source code in order to automatically return an additional cluster (the one with the NOISE labelled instances);
-- Use maven or gradle.
 
 
 ##Bibliography:
