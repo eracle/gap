@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: commons-math:commons-math:1.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-math/commons-math/1.2/3955b41fe9f3c0469bd873331940674812d09bd2/commons-math-1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/commons-math/commons-math/1.2/1539708b92a732d2118a03dbeaaece12fb9e0294/commons-math-1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
