@@ -1,26 +1,27 @@
 # Gap
-Data Mining library with special focus on Clustering of non-vector instances.
+Very old, Data Mining library with special focus on Clustering of non-vector instances. 
+Developed for didactical reasons, and never taken too much seriuosly :-) 
 
-## Non Metric Distance Clustering Library
-There are some clustering domains where is not useful to use vector based representation of instances.
-Alternatives representations of instances allows also the definitions of custom metrics (even not metrics) distances.
-All algorithms implemented do not rely on the vector values of the instances.
-For instance, domains where there are:
+## Motivation
+There are some clustering domains where use vector based representation of instances is not useful.
+By using alternatives instances' representations is also possible to use custom metrics (even not metrics) distance functions.
+All algorithms implemented do not rely on any vector values.
+For instance, domains where there is:
 - High dimensionality of data;
 - Heterogeneity or Complex Data Types.
 
-In some high dimensional domains the computation phase of the distance (or similarity) values spends a lot of time scanning the entire vector of attributes for each instance. 
+Where the vector representations lie on high dimensional domains, compute distances between objects (or similarity) is inefficent, since it takes too time much time for scan the entire vector of attributes on each instance. 
 
-There are some clustering domains where is considerably better to abstract the notion of distance:
+There are some clustering domains where can be interesting to abstract the classical notion of distance, since the objects are not vectors at all:
 - Nodes of a Graph:
     Where the distances between nodes is represented as their shortest path or the number of shared neighbors.
-- Car driving behaviour, represented as time-labelled GPS sequences:
-    Where their distance measure can be implemented as a customized Euclidean Distance.
-- Document, and their bag-of-words representation:
-    Some [authors][1] suggests to restrict the words to a subset of the N most frequent words of the language.
+- Car driving behaviours, represented as time-labelled GPS sequences:
+    Where their distance measure can be implemented as a customized Euclidean Distance (but not necessary a metric).
+- Documents, and their bag-of-words representation:
+    Some [authors][1] suggests to restrict the words, used to compute BOW representation, to a subset of the N most frequent words of the issued language.
 
 
-### Alternative libraries:
+### Alternatives:
 - [Weka][1]:
     In [Weka][1] the distance functions used are all based on vector alike instances, for example Euclidean Distance or Manhattan Distance. 
 - [Elki][7]:
@@ -28,17 +29,18 @@ There are some clustering domains where is considerably better to abstract the n
 
 
 ## History:
-I started this project as a University class homework where the purpose was to perform a news clustering, the class subject was Information Retrieval 
-taught by Prof. [Paolo Ferragina][6] from University of Pisa, then, after graduation, I refined it during some freelance jobs obtained on [UpWork][5]. 
+This project was started as assignment a University's class, its overall objective was to perform news clustering.
+The course's name was Information Retrieval, taught by Prof. [Paolo Ferragina][6] from University of Pisa.
+After graduation, I refined it during some freelance jobs obtained on [UpWork][5]. 
 
 
-## Implementation Details:
-- Jaccard Similarity class;
+## Details:
+- Jaccard Similarity;
 - Mutual Information Similarity;
 - K-Medoids algorithm.
 
     
-#### Implemented Classes:
+#### Classes:
 In order to extend the [JavaML](http://java-ml.sourceforge.net/) library, I implemented some customized classes:
 
 - MiDistanceMatrix:
@@ -54,19 +56,20 @@ In order to extend the [JavaML](http://java-ml.sourceforge.net/) library, I impl
     Customized Dataset class, it simply allows to create a dataset of it.ci.JavaMlAdaptors.DMInstance objects; 
 
 - it.ci.JavaMlAdaptors.DMKMedoids:
-    Extends the net.sf.javaml.clustering.KMedoids class. I simply overridden a method: recalculateMedoids, which is the phase where, for each cluster, its medoid instance is recomputed. The problem was that its superclass accomplishes that by computing a mean value between all the instances of each cluster and then chooses the closest instance of the cluster to that mean value. This behaviour, for my implementation wouldn't be possible, because I designed the Instances to not have values, as normal vectors does, but instead, the only permitted operations were computing distances between them. I solved it by overriding the method, its implementation finds for each cluster the Instance which minimizes the sum of the distance toward all the other cluster's Instances.
-	Every cluster obtained have at least an element which is the representative object of the cluster (from now on the "Medoid"). The algorithm tries to minimize the sum of the distances between every instance and the Medoid of its cluster.
+    Extends the net.sf.javaml.clustering.KMedoids class. I simply overridden a method: recalculateMedoids, which is the phase where, for each cluster, the medoid is recomputed. 
+    Since its superclass computed a mean value between all the instances of each cluster and then the closest instance of the cluster to the mean value is chosen, and I was adapting the algorithm to non-vector based instances and the only allowed operation was to compute distances between them, so I solved it by overriding the method, by implementing an algorithm that finds for each cluster the Instance which minimizes the sum of the distance toward all the other cluster's Instances.
+	By doing so, like the KMedoids classical algorithm, every cluster ends up with a representative element, from now on the "Medoid", and chooses it by minimizing the sum of the distances between every cluster's instance and the candidate Medoid.
 
 - it.ci.SimilarityMeasures.JaccardSimilarity
 	Is defined over pairs of instances, both have to extend both the Set interface and the Instance interface.
 
 
-# Example of Usage: 
+# Usage: 
 ## Dimentionality Reduction via Mutual Information
-1. Simple script which reads from an arff file with N attributes;
-2. Compute a distance matrix, composed by N x N entries, every entry composed by the Mutual Information Distance between a pair of attributes of the dataset (obtained by their Mutual Information Similarity);
-3. Cluster the attributes in k groups using k-medoids algorithm;
-4. For each cluster of attributes found, the attribute (its medoid) name is printed.
+Simple script which reads from an arff file with N attributes:
+1. Computes a distance matrix, composed by N x N entries, each entry is composed by the Mutual Information Distance between a pair of attributes of the datase, obtained by their Mutual Information Similarity;
+2. Clusters the attributes in k groups using k-medoids algorithm;
+3. For each attributes cluster discovers the medoid attribute and its name is printed.
 
 In order to compute the mutual information values and execute the clustering of the attributes, I used some open source libraries:
 
