@@ -1,6 +1,6 @@
 # Gap
-Very old, Data Mining library with special focus on Clustering of non-vector instances. 
-Developed for didactical reasons, and never taken too much seriuosly :-) 
+Unmanteined/Very old, Data Mining algorithm with special focus on Clustering of non-vector instances. 
+That's the outcome of a University' homework, that's not suited for production.
 
 ## Motivation
 There are some modelling domains where, in order to perform a clustering, represent an instance as a classical vector couldn't be the best appraoch.
@@ -10,9 +10,9 @@ For instance, domains where there is:
 - High dimensionality of data;
 - Heterogeneity or Complex Data Types.
 
-Where the vector representations have high dimension compute distances between objects (or similarity) is inefficent, since it takes too time much time to scan the entire vector of attributes on each instance. 
+Where the vector representations have an high number of dimensions to compute distances between objects (or similarity) is inefficent, since it takes too time much time to scan the entire vector of attributes of each instance. 
 
-There are some clustering domains where can be interesting to abstract the classical notion of distance, since the objects are not vectors at all:
+There are some domains where can be interesting to abstract the classical notion of distance, since the objects to be clustered are not vectors at all, for instance:
 - Nodes of a Graph:
     Where the distances between nodes is represented as their shortest path or the number of shared neighbors.
 - Car driving behaviours, represented as time-labelled GPS sequences:
