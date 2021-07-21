@@ -1,6 +1,6 @@
 # Gap
 Unmanteined/Very old, Data Mining algorithm with special focus on Clustering of non-vector instances. 
-That's the outcome of a University' homework, that's not suited for production.
+It's the outcome of a University's homework and is not not suited for production.
 
 ## Motivation
 There are some modelling domains where, in order to perform a clustering, represent an instance as a classical vector couldn't be the best appraoch.
